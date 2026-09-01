@@ -162,7 +162,39 @@ const PRIVACY_KEYWORDS = [
     "social security",
     "date of birth"
 ];
+function boundsToBbox(bounds) {
+    return [
+        bounds.x,
+        bounds.y,
+        bounds.x + bounds.width,
+        bounds.y + bounds.height
+    ];
+}
 
+const REASON_TO_PII_TYPE = {
+    "password": "password", "otp": "otp", "pin": "pin",
+    "cvv": "cvv", "cvc": "cvv",
+    "credit card": "credit_card", "debit card": "debit_card",
+    "card number": "credit_card", "payment-card": "credit_card",
+    "account number": "account_number", "bank account": "account_number",
+    "account": "account_number",
+    "aadhaar": "aadhaar", "aadhar": "aadhaar",
+    "pan number": "pan", "passport": "passport",
+    "driver license": "driving_license", "driving licence": "driving_license",
+    "social security": "other",
+    "date of birth": "date_of_birth",
+    "email": "email", "phone": "phone",
+    "address": "personal_text", "identity": "other"
+};
+
+const REDACTION_FOR_TYPE = {
+    password: "black", otp: "black", pin: "black", cvv: "black",
+    pan: "black", aadhaar: "black", credit_card: "black",
+    debit_card: "black", account_number: "black", passport: "black",
+    driving_license: "black",
+    email: "mask", phone: "mask", date_of_birth: "mask",
+    face: "blur", personal_text: "black", other: "black"
+};
 
 /* ============================================================
    TEXT PRIVACY DETECTION
