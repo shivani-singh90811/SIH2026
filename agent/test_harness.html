@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Agent Executor - Manual Test Harness</title>
+<style>
+  body { font-family: sans-serif; max-width: 640px; margin: 40px auto; }
+  #log { white-space: pre-wrap; background: #111; color: #0f0; padding: 12px; border-radius: 6px; min-height: 120px; }
+  input, button { font-size: 14px; padding: 6px; margin: 4px 0; }
+</style>
+</head>
+<body>
+  <h2>Agent Executor - Manual Browser Test</h2>
+  <p>Open this file directly in a browser (double-click it) and click the
+     buttons below. This exercises executor.js against a REAL DOM, as a
+     sanity check alongside the automated tests in test_executor.js.</p>
+
+  <button id="submit-btn" data-agent-id="element_001">Submit</button>
+  <input id="search-box" data-agent-id="element_002" placeholder="Search" />
+
+  <h3>Run scripted actions</h3>
+  <button onclick="runClick()">Run: click "Submit"</button>
+  <button onclick="runType()">Run: type "weather" into "Search"</button>
+  <button onclick="runScroll()">Run: scroll down 300</button>
+  <button onclick="runWait()">Run: wait 500ms</button>
+  <button onclick="runMissingTarget()">Run: click "Nonexistent" (expect TARGET_NOT_FOUND)</button>
+
+  <h3>Log</h3>
+  <div id="log"></div>
+
+  <script src="executor.js"></script>
+  <script>
+    const elements = [
+      { id: "element_001", type: "button", label: "Submit", bbox: [0, 0, 0, 0], visible: true, interactive: true },
+      { id: "element_002", type: "input", label: "Search", bbox: [0, 0, 0, 0], visible: true, interactive: true },
+    ];
+
+    function log(label, result) {
+      document.getElementById("log").textContent += `${label}: ${JSON.stringify(result)}\n`;
+    }
+
+    async function runClick() {
+      const result = await BrowserAgentExecutor.executeAction({ type: "click", target: "Submit" }, elements);
+      log("click Submit", result);
+    }
+
+    async function runType() {
+      const result = await BrowserAgentExecutor.executeAction(
+        { type: "type", target: "Search", value: "weather" }, elements
+      );
+      log("type weather into Search", result);
+    }
+
+    async function runScroll() {
+      const result = await BrowserAgentExecutor.executeAction({ type: "scroll", direction: "down", amount: 300 }, elements);
+      log("scroll down 300", result);
+    }
+
+    async function runWait() {
+      const result = await BrowserAgentExecutor.executeAction({ type: "wait", duration: 500 }, elements);
+      log("wait 500ms", result);
+    }
+
+    async function runMissingTarget() {
+      const result = await BrowserAgentExecutor.executeAction({ type: "click", target: "Nonexistent" }, elements);
+      log("click Nonexistent", result);
+    }
+
+    document.getElementById("submit-btn").addEventListener("click", () => {
+      document.getElementById("log").textContent += "(native) Submit button was actually clicked!\n";
+    });
+  </script>
+</body>
+</html>
