@@ -1,17 +1,10 @@
 """
 server/schemas.py
 
-Request/response contracts for the backend, matching docs/api.md
-sections 7 (Sanitized Context), 8 (Backend Request), 9 (Backend
-Response), 15 (Error Response), and 16 (Common Error Codes).
+Request/response contracts for the backend API.
 
-NOTE for the integration lead: docs/api.md section 8's example request
-does not include a field for the user's natural-language instruction
-(e.g. "Click the Submit button"), which the backend needs to decide
-what action to return. This module adds `instruction` as an ADDITIVE,
-optional field on BackendRequest -- every field already in the
-contract is unchanged. This should be confirmed/formalized with the
-team rather than treated as final.
+The optional `instruction` field carries the user's natural-language
+request to the reasoning layer. Existing request fields remain unchanged.
 """
 
 from __future__ import annotations
@@ -21,7 +14,7 @@ from typing import Literal, Optional
 from pydantic import BaseModel, Field
 
 # ---------------------------------------------------------------------------
-# Shared building blocks (docs/api.md section 1, 2, 4)
+# Shared request building blocks
 # ---------------------------------------------------------------------------
 
 BBox = tuple[int, int, int, int]  # [x1, y1, x2, y2]
@@ -51,9 +44,7 @@ RedactionType = Literal["black", "blur", "mask"]
 
 
 class PrivacyRegionSummary(BaseModel):
-    """The sanitized-context shape from docs/api.md section 7 -- no
-    confidence or raw value, just enough for the backend to know a
-    region existed and how it was redacted."""
+    """Sanitized region metadata without confidence or raw values."""
 
     type: PIIType
     bbox: BBox
@@ -66,7 +57,7 @@ class ScreenSize(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Backend request (docs/api.md section 8)
+# Backend request
 # ---------------------------------------------------------------------------
 
 class BackendRequest(BaseModel):
@@ -75,7 +66,7 @@ class BackendRequest(BaseModel):
     screen: ScreenSize
     elements: list[Element] = []
     privacy_regions: list[PrivacyRegionSummary] = []
-    image: Optional[str] = None  # base64/opaque sanitized image, MVP: unused by the stub reasoning
+    image: Optional[str] = None  # opaque sanitized image; unused by fallback reasoning
 
     # Additive field -- see module docstring. Optional so a strictly
     # contract-shaped request still validates; without it the stub
@@ -84,7 +75,7 @@ class BackendRequest(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Actions (docs/api.md sections 10-14)
+# Supported actions
 # ---------------------------------------------------------------------------
 
 class ClickAction(BaseModel):
@@ -113,7 +104,7 @@ Action = ClickAction | TypeAction | ScrollAction | WaitAction
 
 
 # ---------------------------------------------------------------------------
-# Backend response (docs/api.md section 9)
+# Backend response
 # ---------------------------------------------------------------------------
 
 class BackendResponse(BaseModel):
@@ -123,7 +114,7 @@ class BackendResponse(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Errors (docs/api.md sections 15-16)
+# Errors
 # ---------------------------------------------------------------------------
 
 ErrorCode = Literal[
