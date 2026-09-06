@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Privacy Agent</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            width: 420px;
+            min-height: 620px;
+            background: #071022;
+            color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .container {
+            padding: 18px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        .subtitle {
+            margin-top: 5px;
+            margin-bottom: 20px;
+            color: #b9c2d0;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            border: 0;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            background: #1787ff;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0d74df;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        #status {
+            margin: 6px 0 14px;
+            min-height: 20px;
+            font-size: 14px;
+        }
+
+        .output {
+            min-height: 300px;
+            max-height: 430px;
+            overflow: auto;
+            padding: 14px;
+            border: 1px solid #263247;
+            border-radius: 12px;
+            background: #030711;
+            color: #dbe7ff;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 12px;
+            line-height: 1.45;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Privacy Agent</h1>
+
+        <div class="subtitle">
+            DOM + Privacy Perception
+        </div>
+
+        <button id="scan" type="button">
+            Scan Current Page
+        </button>
+
+        <button id="redaction" type="button">
+            Scan Privacy Redaction
+        </button>
+
+        <button id="screenshot" type="button">
+            Capture Current Page
+        </button>
+
+        <div id="status">
+            Privacy Agent ready.
+        </div>
+
+        <div id="output" class="output">
+            No perception data yet.
+        </div>
+
+    </div>
+
+    <script src="popup.js"></script>
+
+</body>
+
+</html>
