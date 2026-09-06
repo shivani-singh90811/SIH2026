@@ -162,6 +162,7 @@ const PRIVACY_KEYWORDS = [
     "social security",
     "date of birth"
 ];
+
 function boundsToBbox(bounds) {
     return [
         bounds.x,
@@ -195,6 +196,7 @@ const REDACTION_FOR_TYPE = {
     email: "mask", phone: "mask", date_of_birth: "mask",
     face: "blur", personal_text: "black", other: "black"
 };
+
 
 /* ============================================================
    TEXT PRIVACY DETECTION
@@ -828,30 +830,19 @@ function scanDOM() {
              * privacy regions.
              */
 
-            if (
-                isSensitive
-            ) {
-
-                privacyRegions.push({
-
-                    id:
-                        privacyRegions.length,
-
-                    type:
-                        "dom-sensitive-region",
-
-                    source:
-                        "dom",
-
-                    reasons:
-                        uniqueReasons,
-
-                    confidence:
-                        0.98,
-
-                    bounds
-
-                });
+            if (isSensitive) {
+                const bbox = boundsToBbox(bounds);
+                for (const reason of uniqueReasons) {
+                    const piiType = REASON_TO_PII_TYPE[reason] || "other";
+                    privacyRegions.push({
+                        id: `privacy_${String(privacyRegions.length + 1).padStart(3, "0")}`,
+                        type: piiType,
+                        redaction: REDACTION_FOR_TYPE[piiType] || "black",
+                        bbox, source: "dom",
+                        reasons: uniqueReasons,
+                        bounds
+                    });
+                }
             }
 
 
