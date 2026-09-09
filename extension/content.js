@@ -838,7 +838,9 @@ function scanDOM() {
                         id: `privacy_${String(privacyRegions.length + 1).padStart(3, "0")}`,
                         type: piiType,
                         redaction: REDACTION_FOR_TYPE[piiType] || "black",
-                        bbox, source: "dom",
+                        bbox,
+confidence: 0.98,
+source: "dom",
                         reasons: uniqueReasons,
                         bounds
                     });
