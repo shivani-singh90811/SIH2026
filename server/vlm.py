@@ -90,9 +90,16 @@ def create_provider(config: VLMConfig | None = None) -> VLMProvider:
     if selected.provider in {"fallback", "rule-based", "rule_based"}:
         return FallbackProvider()
 
+    if selected.provider == "groq":
+        # Imported lazily so the fallback path (default) never requires
+        # this file or any network access to be present.
+        from groq_provider import GroqVisionProvider
+
+        return GroqVisionProvider(model_name=selected.model_name)
+
     raise VLMError(
         f"Unsupported MODEL_PROVIDER '{selected.provider}'. "
-        "Only the fallback provider is currently available."
+        "Supported providers: 'fallback', 'groq'."
     )
 
 
