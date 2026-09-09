@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Vision Detector - Manual Test Harness</title>
+<style>
+  body { font-family: sans-serif; max-width: 700px; margin: 40px auto; }
+  #log { white-space: pre-wrap; background: #111; color: #0f0; padding: 12px; border-radius: 6px; min-height: 160px; font-size: 12px; }
+  input, button, select, textarea { font-size: 14px; padding: 6px; margin: 4px 0; display: block; }
+  .hidden-demo { display: none; }
+</style>
+</head>
+<body>
+  <h2>Local Vision Detector - Manual Browser Test</h2>
+  <p>Open this file directly in a browser and click "Scan this page". This
+     exercises detector.js against a REAL DOM, as a sanity check alongside
+     the automated tests in test_detector.js.</p>
+
+  <h3>Sample page content</h3>
+  <h1>Sample Checkout Form</h1>
+  <button id="submit-btn">Submit</button>
+  <input type="email" placeholder="you@example.com" />
+  <input type="password" placeholder="Password" />
+  <img src="https://via.placeholder.com/60" alt="Company logo" />
+  <a href="https://example.com">Learn more</a>
+  <p>A short paragraph of visible text on the page.</p>
+  <button class="hidden-demo">Hidden button (should NOT be detected)</button>
+
+  <button onclick="runScan()">Scan this page</button>
+
+  <h3>Output (docs/api.md section 3 shape)</h3>
+  <div id="log"></div>
+
+  <script src="detector.js"></script>
+  <script>
+    function runScan() {
+      const output = LocalVisionDetector.buildVisionOutput(document);
+      document.getElementById("log").textContent = JSON.stringify(output, null, 2);
+    }
+  </script>
+</body>
+</html>
