@@ -1,0 +1,35 @@
+<svg width="1400" height="420" viewBox="0 0 1400 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="420" rx="28" fill="#07111F"/>
+  <rect x="36" y="36" width="1328" height="348" rx="24" fill="url(#bg1)" stroke="#1E2D48"/>
+  <circle cx="1130" cy="120" r="180" fill="#0C223D" stroke="#193A5F"/>
+  <circle cx="1130" cy="120" r="110" fill="#112E4A"/>
+  <circle cx="970" cy="240" r="12" fill="#2DD4BF"/>
+  <circle cx="1015" cy="170" r="12" fill="#8B5CF6"/>
+  <circle cx="1170" cy="190" r="12" fill="#FBBF24"/>
+  <path d="M845 128C845 117.507 853.507 109 864 109H1092C1102.49 109 1111 117.507 1111 128V155C1111 165.493 1102.49 174 1092 174H864C853.507 174 845 165.493 845 155V128Z" fill="#0F172A" stroke="#29496A"/>
+  <path d="M845 192C845 181.507 853.507 173 864 173H1092C1102.49 173 1111 181.507 1111 192V218C1111 228.493 1102.49 237 1092 237H864C853.507 237 845 228.493 845 218V192Z" fill="#0F172A" stroke="#29496A"/>
+  <path d="M845 254C845 243.507 853.507 235 864 235H1003C1013.49 235 1022 243.507 1022 254V280C1022 290.493 1013.49 299 1003 299H864C853.507 299 845 290.493 845 280V254Z" fill="#0F172A" stroke="#29496A"/>
+  <rect x="90" y="100" width="500" height="8" rx="4" fill="#2DD4BF" fill-opacity="0.8"/>
+  <rect x="90" y="124" width="390" height="8" rx="4" fill="#94A3B8" fill-opacity="0.7"/>
+  <text x="90" y="205" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="52" font-weight="700">On-device Visual</text>
+  <text x="90" y="265" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="52" font-weight="700">Perception</text>
+  <text x="90" y="315" fill="#7DD3FC" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="600">for Lightweight Browser Agents</text>
+  <text x="90" y="356" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="500">Privacy-first local reasoning for safer browser automation</text>
+  <rect x="756" y="92" width="70" height="70" rx="16" fill="#0F172A" stroke="#2DD4BF"/>
+  <rect x="770" y="108" width="42" height="12" rx="6" fill="#2DD4BF"/>
+  <rect x="770" y="131" width="28" height="12" rx="6" fill="#E2E8F0"/>
+  <rect x="770" y="154" width="36" height="12" rx="6" fill="#7DD3FC"/>
+  <path d="M732 328L800 296L870 328V344H732V328Z" fill="#0F172A" stroke="#1E3A5F"/>
+  <path d="M760 214V283" stroke="#4ADE80" stroke-width="6" stroke-linecap="round"/>
+  <path d="M760 283L834 235" stroke="#4ADE80" stroke-width="6" stroke-linecap="round"/>
+  <path d="M760 214L836 188" stroke="#7DD3FC" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="760" cy="214" r="10" fill="#4ADE80"/>
+  <circle cx="836" cy="188" r="10" fill="#7DD3FC"/>
+  <circle cx="834" cy="235" r="10" fill="#4ADE80"/>
+  <defs>
+    <linearGradient id="bg1" x1="36" y1="36" x2="1364" y2="384" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#07111F"/>
+      <stop offset="1" stop-color="#0E1B2D"/>
+    </linearGradient>
+  </defs>
+</svg>

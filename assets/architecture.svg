@@ -1,0 +1,53 @@
+<svg width="1400" height="760" viewBox="0 0 1400 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="760" rx="28" fill="#07111F"/>
+  <rect x="48" y="48" width="1304" height="664" rx="24" fill="#0D1728" stroke="#1E2D48"/>
+  <g>
+    <rect x="94" y="210" width="170" height="110" rx="18" fill="#11233F" stroke="#2DD4BF"/>
+    <text x="179" y="255" text-anchor="middle" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="600">Browser</text>
+    <text x="179" y="288" text-anchor="middle" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="14">UI + page context</text>
+  </g>
+  <g>
+    <rect x="328" y="210" width="216" height="110" rx="18" fill="#11233F" stroke="#7DD3FC"/>
+    <text x="436" y="255" text-anchor="middle" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="600">DOM + Vision</text>
+    <text x="436" y="288" text-anchor="middle" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="14">Page structure / screen</text>
+  </g>
+  <g>
+    <rect x="604" y="210" width="206" height="110" rx="18" fill="#11233F" stroke="#8B5CF6"/>
+    <text x="707" y="255" text-anchor="middle" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">PII Detection</text>
+    <text x="707" y="288" text-anchor="middle" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="14">Email, OTP, card, etc.</text>
+  </g>
+  <g>
+    <rect x="876" y="210" width="196" height="110" rx="18" fill="#11233F" stroke="#F59E0B"/>
+    <text x="974" y="255" text-anchor="middle" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">Local Redaction</text>
+    <text x="974" y="288" text-anchor="middle" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="14">Mask + sanitize</text>
+  </g>
+  <g>
+    <rect x="219" y="420" width="220" height="116" rx="18" fill="#11233F" stroke="#F472B6"/>
+    <text x="329" y="465" text-anchor="middle" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">Privacy</text>
+    <text x="329" y="497" text-anchor="middle" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">Verification</text>
+    <text x="329" y="522" text-anchor="middle" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="14">Safe to send</text>
+  </g>
+  <g>
+    <rect x="505" y="420" width="292" height="116" rx="18" fill="#11233F" stroke="#34D399"/>
+    <text x="651" y="465" text-anchor="middle" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">Backend Reasoning</text>
+    <text x="651" y="497" text-anchor="middle" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="14">FastAPI + rule-based fallback</text>
+  </g>
+  <g>
+    <rect x="872" y="420" width="202" height="116" rx="18" fill="#11233F" stroke="#60A5FA"/>
+    <text x="973" y="465" text-anchor="middle" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">Action</text>
+    <text x="973" y="497" text-anchor="middle" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">Validator</text>
+    <text x="973" y="522" text-anchor="middle" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="14">Restricted actions</text>
+  </g>
+  <path d="M264 265H328" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M544 265H604" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M810 265H876" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M437 320V388H329V420" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M707 320V388H651V420" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M974 320V388H973V420" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M439 536V585H597V585H826" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M973 536V585H826" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <g>
+    <rect x="530" y="610" width="250" height="56" rx="12" fill="#0F172A" stroke="#29496A"/>
+    <text x="655" y="646" text-anchor="middle" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="600">Sanitized Context</text>
+  </g>
+</svg>
