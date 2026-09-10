@@ -1,141 +1,246 @@
+<div align="center">
+
 # On-device Visual Perception for Lightweight Browser Agents
+
+### SIH 2026 — Problem Statement 171
+
+A privacy-first browser-agent prototype that combines DOM understanding, local visual perception, sensitive-data protection, and validated browser actions.
+
+[![SIH 2026](https://img.shields.io/badge/SIH-2026-0a84ff?style=for-the-badge)](https://www.sih.gov.in/)
+[![Problem Statement 171](https://img.shields.io/badge/Problem%20Statement-171-1d3557?style=for-the-badge)](#)
+[![ISRO](https://img.shields.io/badge/ISRO-Organization-0f172a?style=for-the-badge)](#)
+[![Python](https://img.shields.io/badge/Python-3.x-3776AB?style=for-the-badge&logo=python&logoColor=white)](#)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Enabled-009688?style=for-the-badge&logo=fastapi&logoColor=white)](#)
+[![Privacy-first](https://img.shields.io/badge/Privacy-First-7c3aed?style=for-the-badge)](#)
+
+</div>
 
 <p align="center">
   <img src="assets/hero.svg" alt="Project hero banner" width="100%" />
 </p>
 
-<p align="center">
-  <a href="#"><img alt="SIH 2026" src="https://img.shields.io/badge/SIH-2026-0a84ff?style=for-the-badge" /></a>
-  <a href="#"><img alt="Problem Statement 171" src="https://img.shields.io/badge/Problem%20Statement-171-1d3557?style=for-the-badge" /></a>
-  <a href="#"><img alt="ISRO" src="https://img.shields.io/badge/ISRO-Organization-0f172a?style=for-the-badge" /></a>
-  <a href="#"><img alt="Python" src="https://img.shields.io/badge/Python-3.x-3776AB?style=for-the-badge&logo=python&logoColor=white" /></a>
-  <a href="#"><img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-Enabled-009688?style=for-the-badge&logo=fastapi&logoColor=white" /></a>
-  <a href="#"><img alt="Privacy-first" src="https://img.shields.io/badge/Privacy-First-7c3aed?style=for-the-badge" /></a>
-</p>
-
-This project explores a privacy-preserving design for browser agents that reason over page context without exposing sensitive user data to remote systems. The current repository implements a backend prototype that accepts sanitized browser context, performs rule-based action inference, and rejects requests unless privacy verification has already succeeded.
-
 ## Project Overview
 
-Modern browser agents can inspect page elements, understand user intent, and propose actions such as clicking, typing, scrolling, or waiting. However, a webpage often contains sensitive information: passwords, email addresses, phone numbers, OTPs, financial identifiers, and other personal data. Feeding raw browser context to a remote AI model can unintentionally leak that information beyond the user's device.
+This project addresses a core problem in browser automation: a browser agent can understand a page and decide what to do, but the page often contains sensitive information that should never be exposed to a remote reasoning system.
 
-This project focuses on a simple but important principle: sensitive information should be detected and protected locally before any context crosses the network boundary. In the current implementation, the backend is intentionally strict: it accepts only sanitized context, validates request structure, and emits only a limited set of safe browser actions rather than arbitrary executable instructions.
+A lightweight browser agent must interpret page structure and visual cues while staying privacy-aware. The current repository is a prototype for that idea: it models a privacy boundary around browser context and restricts reasoning to sanitized inputs and validated action outputs.
 
-## The Problem
+From a system-design perspective, the core idea is straightforward:
 
-Browser agents that can observe a page and reason about it are useful, but they introduce a privacy risk when they send page content or screenshots to remote models. Even when the task is harmless, the surrounding page may contain confidential information that the model does not need to see.
+- the browser can observe relevant page content
+- sensitive values can be detected locally
+- information can be redacted or masked before transmission
+- only sanitized context moves beyond the device boundary
+- the reasoning step returns a limited, safe set of browser actions
 
-The risk is especially significant for:
+This is a prototype and an architectural reference rather than a production browser agent stack. The active implementation is the backend and its privacy-aware API contract.
 
-- passwords and credentials
-- email addresses
-- phone numbers
-- OTPs and verification codes
-- financial or card data
-- identity numbers such as Aadhaar or PAN
-- personal text that should remain local
+## Problem Statement
 
-The repository's data model includes explicit PII categories such as `password`, `email`, `phone`, `otp`, `pin`, `cvv`, `credit_card`, `debit_card`, `aadhaar`, `pan`, and related privacy labels. These categories reflect the current privacy focus of the implementation.
+Problem Statement 171 asks for a lightweight browser agent that can understand webpages and take useful actions while preserving user privacy. The challenge is that webpages often contain both routine interface elements and sensitive information such as personal records, financial identifiers, login details, or OTPs.
+
+A browser agent that sends raw DOM content or screenshots to a remote AI service can unintentionally expose data that is unrelated to the task. The repository addresses this by modeling a privacy gate before the reasoning layer and by constraining output to structured actions instead of arbitrary commands.
+
+Important privacy categories reflected in the repository include:
+
+- password
+- email
+- phone
+- otp
+- pin
+- cvv
+- credit_card
+- debit_card
+- aadhaar
+- pan
+- passport
+- driving_license
+- account_number
+- date_of_birth
+- face
+- personal_text
 
 ## Our Solution
 
-The repository implements a privacy-first backend boundary around the browser-agent reasoning step. The architecture is intentionally constrained and local-first:
-
-- browser context is treated as untrusted until sanitized
-- privacy verification is required before processing
-- only a fixed set of structured actions is returned
-- no arbitrary JavaScript or executable instruction is generated
-- the rule-based fallback reasoner remains separate from API contracts and can be replaced by a future local VLM provider
+The project defines a privacy-first browser-agent pipeline built around a safety boundary:
 
 ```mermaid
 flowchart LR
-    A[Browser] --> B[DOM + Local Vision]
-    B --> C[PII Detection]
-    C --> D[Local Redaction]
-    D --> E[Privacy Verification]
-    E --> F[Sanitized Context]
-    F --> G[Network Boundary]
-    G --> H[Backend Reasoning]
-    H --> I[Structured Action]
-    I --> J[Local Action Validator]
-    J --> A
+    subgraph Implemented[Implemented]
+        A[Webpage Context] --> B[Sanitized DOM Input]
+        B --> C[Privacy Verification]
+        C --> D[Structured Action Request]
+        D --> E[Rule-based Reasoning Boundary]
+        E --> F[Validated Action Output]
+        D --> M[Optional Groq-hosted Vision Provider]
+        M --> F
+    end
+
+    subgraph InProgress[In Progress]
+        G[Browser Extension]
+        H[Local Visual Perception]
+        I[Redaction / Masking in Browser]
+    end
+
+    subgraph Planned[Planned]
+        J[Full Browser Automation Runtime]
+        K[On-device VLM / LLM Integration]
+        L[Production-grade Browser Execution]
+    end
+
+    A --> G
+    G --> H
+    H --> I
+    I --> C
+    F --> J
+    J --> K
+    K --> L
 ```
 
-This repository is best described as a prototype and reference architecture for privacy-aware browser automation. The current implementation demonstrates the safety boundary and action-validation contract; it does not yet include a production-grade local VLM or full browser-extension execution layer.
+The implemented portion of the repository is the privacy-aware backend contract, the rule-based action inference fallback, the validation boundary, and an optional Groq-hosted vision provider. The browser extension, live local vision stages, and fully integrated browser execution loop are still in progress or planned rather than fully shipped. The default provider remains rule-based; the optional hosted provider requires an API key and is covered by mocked tests.
+
+### Current Status at a Glance
+
+| Layer | Status | Evidence in this repository |
+|---|---|---|
+| Sanitized request schema | Implemented | Pydantic models in `server/schemas.py` |
+| Privacy verification gate | Implemented | `privacy_verified` enforcement in `server/main.py` |
+| Rule-based action inference | Implemented | `server/reasoning.py` and fallback provider in `server/vlm.py` |
+| Model-agnostic reasoning boundary | Implemented | `VLMProvider` and `create_provider()` in `server/vlm.py` |
+| Optional Groq-hosted VLM provider | Implemented, opt-in | `server/groq_provider.py` with mocked provider tests |
+| Browser extension runtime | In Progress / Planned | Extension folder exists but is not populated with functional runtime code |
+| Local visual perception | In Progress / Planned | Vision folder exists as project structure |
+| Full browser agent execution | Planned | Not implemented in the current codebase |
+| On-device VLM integration | Planned | No local model runtime is implemented in the current codebase |
 
 ## Key Features
 
-- Local-first privacy contract for browser context
-- PII-aware request schema with privacy region summaries
-- Validation gate requiring `privacy_verified: true`
-- Structured action outputs: click, type, scroll, and wait
-- Rule-based reasoning fallback in the backend
-- Explicit VLM provider interface for future local-model integration
-- Safety limits on scroll and wait actions
-- Strict request validation and error handling
-- Automated backend tests covering the API contract and safety checks
+- Privacy-aware request validation through a strict backend contract
+- Local-first processing model that rejects unverified context
+- PII metadata and privacy-region summaries in the schema layer
+- Sanitized context handling for action inference
+- Structured browser actions: click, type, scroll, and wait
+- Rule-based reasoning fallback with a model-agnostic provider boundary
+- Optional Groq-hosted open-weight vision provider behind the same boundary
+- Action validation to prevent unsupported or dangerous outputs
+- Automated FastAPI-based backend tests covering validation and safety behavior
+- Prototype architecture designed to support on-device VLM inference later
 
 ## System Architecture
 
-The repository currently centers on the backend and privacy boundary, while the browser extension, privacy detector, vision layer, and agent directories are present as project scaffolding or future components.
+The repository is intentionally modular, even though several folders are currently scaffolded rather than fully implemented.
 
-### 1. Browser Extension
-The extension layer is expected to collect page context and send only sanitized content to the backend. In the current repository snapshot, the extension directory is present but not yet populated with implementation logic.
+### Browser Extension
+The extension directory is part of the project structure and is intended to collect browser context, but it is not populated with a complete runtime implementation in this repository snapshot.
 
-### 2. DOM / Visual Perception
-The system is designed to reason over page structure and visual context. The backend accepts a list of UI element descriptors, screen metadata, and an optional sanitized image field. The current reasoner uses sanitized UI metadata rather than raw visual analysis.
+### DOM + Visual Perception
+The backend accepts UI elements, screen dimensions, and an optional sanitized image field. This reflects a design where browser context can be inspected locally before reaching the model boundary.
 
-### 3. Privacy Detection
-The privacy model includes patterns for password, email, phone, OTP, card, Aadhaar, PAN, and related personal identifiers. Sensitive regions are represented as structured summaries instead of exposing raw values to the backend.
+### Privacy / PII Detection
+The privacy schema includes explicit sensitive-data classifications, including password, OTP, card, Aadhaar, PAN, and personal identifiers. These are tracked as structured privacy-region summaries instead of passing raw values downstream.
 
-### 4. Redaction
-Sensitive regions are expected to be redacted or masked before network transmission. This is represented as a privacy-region summary with a redaction type and bounding box.
+### Redaction / Masking
+Sensitive regions are expected to be redacted before sending data beyond the browser. The schema models region type, bounding box, and redaction style.
 
-### 5. Privacy Verification
-The backend explicitly rejects requests where `privacy_verified` is false. This creates a safety checkpoint before the reasoning layer can act.
+### Privacy Verification
+The backend checks `privacy_verified` before it will infer an action. If verification is false, the request is rejected.
 
-### 6. Backend / Reasoning Layer
-The main implementation lives in `server/`: FastAPI app, request schemas, action reasoning, VLM abstraction, and automated tests. This is the active logic in the repository.
+### Backend / Reasoning Layer
+The active implementation is in the `server/` folder. It contains the FastAPI backend, Pydantic schemas, rule-based action reasoning, and the VLM abstraction used as a provider boundary.
 
-### 7. Action Validator
-The system validates the inferred action before it is returned. Only known safe action models are accepted; unsupported or arbitrary action types are rejected.
+### Action Validation
+The system validates output against a restricted set of supported action types and rejects unsupported or arbitrary action objects.
 
-### 8. Browser Execution
-The project intends to enable browser execution only after a validated action passes the local safety boundary. The current code demonstrates the API contract and validation layer but not full browser automation.
+### Browser Execution
+The browser execution layer is planned as the next stage. The current code proves the safety boundary and structured action contract, but does not implement a full browser automation runner.
 
 ## Privacy by Design
 
-This is the core design principle of the repository.
+Privacy is the primary architectural idea behind this project.
 
-Sensitive data should be detected locally and never sent upstream in raw form. The backend is intentionally designed to accept only sanitized context. Once privacy verification succeeds, the system can proceed with a limited action inference loop. This means:
+1. Sensitive information should be detected locally where possible.
+2. Data and visual regions containing personal content should be identified.
+3. Sensitive values should be redacted, masked, or removed before network transmission.
+4. Privacy verification should happen before any sensitive context crosses the boundary.
+5. Only sanitized context should reach the reasoning layer.
+6. The reasoning layer should not receive raw page screenshots or credentials unless explicitly sanitized and verified.
+7. The tool should return only a limited set of structured browser actions, not arbitrary executable instructions.
 
-- sensitive regions are identified locally
-- those regions are redacted or masked before transmission
-- privacy verification acts as a boundary gate
-- only safe, sanitized context crosses the network boundary
-- generated actions are constrained to a known set of valid browser interactions
-- action execution is gated by local validation before the browser acts
+Examples supported by the repository include email, phone numbers, passwords, OTPs, credit/debit card data, Aadhaar, PAN, and other personal identifiers.
 
-This design is intentionally simpler and safer than sending a full page snapshot or raw browser state to an external AI service.
+## How It Works
+
+### Step 1 — Observe
+The browser or local page context is inspected for relevant UI elements and page structure.
+
+### Step 2 — Detect
+Potential privacy issues are identified and represented as region metadata or PII categories.
+
+### Step 3 — Protect
+Sensitive content is redacted or masked before it is sent onward.
+
+### Step 4 — Verify
+The request is required to pass a privacy verification check before processing continues.
+
+### Step 5 — Reason
+The backend uses the sanitized request and a rule-based fallback reasoner to infer an action.
+
+### Step 6 — Validate
+The action is checked against the supported action models and rejected if invalid.
+
+### Step 7 — Execute
+Only a safe, structured action is returned for browser execution.
+
+## Project Components
+
+| Component | Purpose |
+|---|---|
+| `agent/` | Agent-side orchestration and browser-agent concepts |
+| `extension/` | Browser extension layer scaffold |
+| `privacy/` | Privacy detection and sensitive-data handling |
+| `server/` | Active FastAPI backend, request schemas, reasoning logic, and tests |
+| `vision/` | Visual perception and screen-analysis concepts |
+| `tests/` | Testing area for repository validation |
+| `docs/` | Documentation area; currently scaffolded |
 
 ## Tech Stack
 
-| Layer | Technology |
-|------|------------|
-| Backend | Python |
-| API framework | FastAPI |
-| Validation | Pydantic |
-| ASGI server | Uvicorn |
-| Testing | unittest |
-| Browser integration | Browser-extension-oriented design, scaffolded in repo |
-| Privacy model | Custom PII taxonomy and redaction metadata |
+### Frontend / Browser
+- Browser extension architecture
+- DOM-driven UI element parsing
+- Browser-oriented context collection
 
-## Project Structure
+### Backend
+- Python
+- FastAPI
+- Pydantic
+- Uvicorn
+
+### Privacy / Safety
+- PII classification schema
+- Privacy-region metadata
+- Redaction / masking model
+- Privacy verification gate
+
+### AI / Reasoning
+- Model-agnostic VLM boundary
+- Rule-based fallback implementation
+- Optional Groq-hosted Llama 3.2 Vision provider
+- Structured action output contract
+
+### Testing
+- Python `unittest`
+- FastAPI `TestClient`
+
+## Repository Structure
 
 ```text
 SIH2026/
 ├── agent/
 ├── assets/
+│   ├── hero.svg
+│   ├── architecture.svg
+│   └── privacy-flow.svg
 ├── docs/
 ├── extension/
 ├── privacy/
@@ -152,68 +257,151 @@ SIH2026/
 ├── vision/
 ├── .gitignore
 ├── README.md
-└── LICENSE (if added in the future)
+└── .gitignore
 ```
 
-Key directories:
+The active implementation is in `server/`. Other folders are part of the overall system design and project structure but are not fully implemented in this snapshot.
 
-- `server/` — active implementation: FastAPI backend, schemas, reasoning, and tests
-- `privacy/` — privacy detection and redaction concepts intended for local processing
-- `vision/` — visual perception and screen-analysis components
-- `extension/` — browser extension layer scaffold
-- `agent/` — browser-agent orchestration and decision logic
-- `docs/` — project documentation and design notes
-- `tests/` — project testing area; the active suite is currently in `server/test_server.py`
+## Backend
 
-## How It Works
+The current backend is a FastAPI service that accepts sanitized browser context and returns a single supported browser action.
 
-1. A user interacts with a webpage or a browser automation scenario.
-2. Browser-side components gather only the necessary page context.
-3. Local privacy checks identify sensitive regions and metadata.
-4. Sensitive text or visual areas are redacted or masked before any remote reasoning.
-5. A privacy verification step confirms the context is safe to send.
-6. The backend receives a sanitized request with validated metadata.
-7. The rule-based reasoning layer maps the instruction to a supported action.
-8. The action is validated against a strict set of safe response models.
-9. The backend returns a single structured action such as click, type, scroll, or wait.
-10. The browser executes only the validated action.
+The implemented logic verifies that:
 
-## Demo
+- the request schema is valid
+- `privacy_verified` is true
+- the instruction maps to a supported action type
+- the action target exists in the provided elements
+- only a generated action from a constrained set is returned
 
-This repository currently contains a backend prototype rather than a complete end-user browser demo. The most direct way to explore the project is to run the FastAPI service and use the interactive Swagger UI provided by FastAPI.
+The VLM layer is intentionally model-agnostic. The default provider is a
+fallback that adapts the existing safe reasoning implementation. An optional
+Groq-hosted open-weight vision provider also implements the same interface and
+is covered by mocked tests. A future on-device VLM can use this boundary
+without changing the API contract.
 
-Start the backend:
+## API
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/health` | Health check for the backend |
+| POST | `/api/v1/action` | Accept sanitized context and return one validated action |
+| POST | `/api/v1/privacy-check` | Demo-only privacy check endpoint for page text analysis |
+
+### Request Contract
+The backend request includes:
+
+- `request_id`
+- `privacy_verified`
+- `screen`
+- `elements`
+- `privacy_regions`
+- `image` (optional, sanitized only)
+- `instruction` (optional but required for target-based action inference)
+
+### Response Contract
+The response contains:
+
+- `request_id`
+- `success: true`
+- `action` with one of the supported action models
+
+## Action Types
+
+The current backend supports only a limited and validated set of structured actions:
+
+- `click`: target a visible UI element
+- `type`: target an element and enter a value
+- `scroll`: direction and bounded amount
+- `wait`: bounded duration in milliseconds
+
+These actions are structured and validated rather than arbitrary JavaScript or executable commands.
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.x
+- Git
+- A local terminal or VS Code terminal
+
+### Clone
+
+```bash
+git clone <repository-url>
+cd SIH2026
+```
+
+### Create a virtual environment
+
+```bash
+python -m venv .venv
+```
+
+Windows:
+
+```powershell
+.venv\Scripts\activate
+```
+
+Linux/macOS:
+
+```bash
+source .venv/bin/activate
+```
+
+### Install dependencies
 
 ```bash
 cd server
 pip install -r requirements.txt
+```
+
+For the test environment:
+
+```bash
+pip install -r requirements-test.txt
+```
+
+## Running the Project
+
+### Backend
+
+```bash
+cd server
 uvicorn main:app --reload
 ```
 
-Then open:
+The service is available locally at:
 
 - http://127.0.0.1:8000
 - http://127.0.0.1:8000/docs
 
-The API contract includes the `POST /api/v1/action` route and the demo-only `POST /api/v1/privacy-check` endpoint. The repository does not include a real browser extension demo or product screenshots at this stage.
+### Optional hosted VLM provider
 
-## Run Locally
+The default provider is the local rule-based fallback. An opt-in Groq-hosted
+open-weight vision provider is also implemented behind the same validated
+boundary. It requires a `GROQ_API_KEY` and sends only context that has already
+passed the repository's privacy verification contract.
 
-From the repository root:
-
-```bash
-cd server
-pip install -r requirements.txt
+```powershell
+$env:MODEL_PROVIDER = "groq"
+$env:GROQ_API_KEY = "your-key"
+$env:MODEL_NAME = "llama-3.2-11b-vision-preview"
 uvicorn main:app --reload
 ```
 
-The service runs locally on port 8000 and exposes the OpenAPI docs at `/docs`.
+This is not an on-device inference implementation, and it does not provide the
+missing browser extension or full execution loop.
+
+### Browser extension
+No complete browser extension runtime is present in this repository snapshot. The folder is included as part of the project structure and is intended for future integration.
 
 ## Testing
 
-The active automated test suite is in `server/test_server.py` and uses Python's built-in `unittest` framework together with FastAPI's `TestClient`.
+The repository currently includes automated backend tests in `server/test_server.py` using Python's built-in `unittest` framework and FastAPI's `TestClient`.
 
-Run the current tests:
+Run the test suite:
 
 ```bash
 cd server
@@ -221,73 +409,93 @@ pip install -r requirements.txt -r requirements-test.txt
 python -m unittest test_server.py -v
 ```
 
-The current implementation includes a focused contract test suite covering health checks, supported actions, privacy rejection, target lookup errors, validation failures, and provider boundaries.
+The code documents the test suite as covering the health endpoint, action generation, privacy rejection, target lookup errors, request validation, and provider-selection behavior.
+
+## Demo
+
+This repository does not currently include a production demo, screenshots, or a full browser-automation walkthrough. The most concrete runnable demo is the FastAPI backend and its Swagger UI. The optional Groq provider can be exercised through the same API after configuration.
+
+Demo assets will be added as the prototype progresses.
+
+## Visual Assets
+
+The project includes lightweight SVG assets that are suitable for GitHub and easy to scale.
+
+![Overview banner](assets/hero.svg)
+
+![System architecture](assets/architecture.svg)
+
+![Privacy flow](assets/privacy-flow.svg)
+
+## Team
+
+| Member | Responsibility |
+|---|---|
+| Divya | DOM + Browser Extension |
+| Hema | Local Vision / WebGPU |
+| Shivani | Privacy & PII Detection |
+| Shiva | Redaction + Privacy Verification |
+| Arif | Backend + VLM / LLM |
+| Kaveri | Action Validator + Agent Loop + Evaluation |
 
 ## Project Status
 
 ### Implemented
 
 - Privacy-first backend API contract
-- Sanitized context request model with privacy verification gate
-- PII metadata and privacy region summaries
-- Rule-based action reasoning for click, type, scroll, and wait
-- VLM abstraction with fallback provider pattern
-- Response validation against a restricted action schema
-- Backend health endpoint and demo privacy-check route
-- Automated tests for contract and safety behavior
+- Sanitized context request model
+- Privacy verification gate
+- PII categories and privacy-region schema
+- Rule-based browser action reasoning
+- Support for click, type, scroll, and wait actions
+- Base VLM abstraction and provider selection logic
+- Optional Groq-hosted vision provider with mocked HTTP tests
+- Backend health endpoint and validation behavior
+- Automated test suite for the backend contract
 
-### Planned / Future Scope
+### In Progress
 
-- Real on-device vision processing
-- Browser extension integration with the local privacy pipeline
-- Local VLM or LLM provider selection and benchmarking
-- More robust PII detection and redaction in live browser contexts
-- Stronger browser automation coverage and execution validation
-- Expanded privacy evaluation for visual and DOM-based leakage
-- Packaging for a more complete demo experience
+- Browser extension integration
+- Local vision pipeline
+- Privacy detection and redaction workflow in a live browser context
+- Deeper browser-agent action orchestration
+
+### Planned
+
+- Real on-device visual perception pipeline
+- Browser-side redaction and verification in the extension
+- On-device VLM or lightweight local model integration
+- Extended action planning for multi-step tasks
+- Broader browser compatibility and execution validation
+- Benchmarking and evaluation workflow
 
 ## Future Scope
 
-A realistic roadmap for this project includes:
+Future work for this project includes:
 
-- stronger local vision models for page understanding
-- improved browser coverage and event handling
-- deeper action-planning workflows for multi-step agent tasks
-- more comprehensive privacy detection across visual and DOM-derived content
-- lower-latency local inference for constrained devices
-- broader browser and OS integration for real-world deployment
-
-## Team
-
-The repository does not currently include a formal contributor roster or team page. As the project evolves, this section can be updated with the actual team members and roles.
+- stronger local visual models for webpage understanding
+- better browser coverage and event-handling robustness
+- richer PII detection in visual and DOM-derived context
+- more capable local reasoning agents for real-world tasks
+- WebGPU or optimized local inference paths where appropriate
+- evaluation pipelines for action quality, privacy safety, and redaction effectiveness
 
 ## Why This Matters
 
-This project addresses a practical requirement for trustworthy AI-driven browser automation: users should not have to choose between useful assistance and privacy exposure. By pushing detection, redaction, and verification to the device boundary, the system reduces unnecessary leakage of personal information while still enabling local reasoning and structured action generation.
+This project matters because it addresses a core trust issue in AI-assisted browser automation. If browser agents can read pages and act on user intent, they must also be designed to avoid leakage of unnecessary personal and sensitive information. A local-first, privacy-aware approach reduces exposure while preserving useful agent behavior.
 
-## Visual Assets
+## Security / Privacy Warning
 
-The repository includes a minimal set of lightweight SVG assets designed for GitHub rendering.
+This repository is a prototype and research-oriented project. It demonstrates a privacy-aware architecture and validation boundary, but it should not be treated as production-hardened security software without further testing, hardening, and deployment review.
 
-![Overview banner](assets/hero.svg)
+## Documentation Links
 
-![System architecture](assets/architecture.svg)
+The repository currently contains a minimal set of project folders and scaffolded documentation areas. There are no formal additional docs files that are complete enough to link from the root README beyond the server README and the project folders themselves.
 
-## Badges
+## License
 
-The README uses only badges that are supported by the repository evidence and project context.
+No license file was found in the repository, so no license section is included.
 
-- SIH 2026
-- Problem Statement 171
-- ISRO
-- Python
-- FastAPI
-- Privacy-first
+## Visual Design Notes
 
-## README Quality Check
-
-This README was written to be concise, accurate, and aligned with the actual repository state. It avoids claiming features that are not implemented and clearly distinguishes between the current prototype and future architecture.
-
-## Git Safety
-
-No git commands were run beyond repository inspection. The project was not committed, pushed, or reset.
+The main purpose of this README is to present the repository accurately and professionally, not to oversell incomplete functionality. The project is best described as a privacy-first prototype for safe browser-agent reasoning with a clear path toward local visual perception and stronger browser integration.
