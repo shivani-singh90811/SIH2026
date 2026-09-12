@@ -1,0 +1,11 @@
+{
+  "name": "local-vision-detector",
+  "version": "1.0.0",
+  "description": "DOM-based fallback for the Local Vision stage of the Privacy-Preserving AI Browser Agent.",
+  "main": "detector.js",
+  "scripts": {
+    "test": "node --test test_detector.js"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
