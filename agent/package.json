@@ -1,0 +1,11 @@
+{
+  "name": "browser-agent-executor",
+  "version": "1.0.0",
+  "description": "Safe click/type/scroll/wait action execution for the Privacy-Preserving AI Browser Agent.",
+  "main": "executor.js",
+  "scripts": {
+    "test": "node --test test_executor.js"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
