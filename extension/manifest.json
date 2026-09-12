@@ -1,0 +1,34 @@
+{
+    "manifest_version": 3,
+    "name": "Privacy Agent",
+    "version": "3.2.0",
+    "description": "Privacy-preserving browser perception agent.",
+    "permissions": [
+        "activeTab",
+        "tabs",
+        "scripting"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "background": {
+        "service_worker": "service-worker.js"
+    },
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "Privacy Agent"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_idle",
+            "all_frames": true
+        }
+    ],
+    "icons": {}
+}

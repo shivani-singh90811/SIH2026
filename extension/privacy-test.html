@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Privacy Agent Test</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+
+        .box {
+            max-width: 600px;
+            padding: 25px;
+            border: 2px solid #ccc;
+        }
+
+        .field {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        [contenteditable="true"] {
+            width: 400px;
+            padding: 10px;
+            font-size: 16px;
+            display: block;
+        }
+
+        [contenteditable="true"] {
+            min-height: 60px;
+            border: 1px solid #aaa;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="box">
+
+        <h1>Privacy Agent Test</h1>
+
+        <div class="field">
+            <label>Email</label>
+            <input id="email" name="email" type="email" value="alice@example.com">
+        </div>
+
+        <div class="field">
+            <label>Password</label>
+            <input id="password" name="password" type="password" value="SuperSecret123!">
+        </div>
+
+        <div class="field">
+            <label>Phone</label>
+            <input id="phone" name="phone" type="tel" value="+919876543210">
+        </div>
+
+        <div class="field">
+            <label>Credit Card</label>
+            <input id="card" name="credit-card" type="text" value="4111 1111 1111 1111">
+        </div>
+
+        <div class="field">
+            <label>Visible Email Text</label>
+
+            <div>
+                alice@example.com
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Editable Secret</label>
+
+            <div contenteditable="true">
+                THIS_IS_A_PRIVATE_SECRET
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
