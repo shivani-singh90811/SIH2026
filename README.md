@@ -7,16 +7,14 @@
 A privacy-first browser-agent prototype that combines DOM understanding, local visual perception, sensitive-data protection, and validated browser actions.
 
 [![SIH 2026](https://img.shields.io/badge/SIH-2026-0a84ff?style=for-the-badge)](https://www.sih.gov.in/)
-[![Problem Statement 171](https://img.shields.io/badge/Problem%20Statement-171-1d3557?style=for-the-badge)](#)
-[![ISRO](https://img.shields.io/badge/ISRO-Organization-0f172a?style=for-the-badge)](#)
-[![Python](https://img.shields.io/badge/Python-3.x-3776AB?style=for-the-badge&logo=python&logoColor=white)](#)
-[![FastAPI](https://img.shields.io/badge/FastAPI-Enabled-009688?style=for-the-badge&logo=fastapi&logoColor=white)](#)
-[![Privacy-first](https://img.shields.io/badge/Privacy-First-7c3aed?style=for-the-badge)](#)
+[![Problem Statement 171](https://img.shields.io/badge/Problem%20Statement-171-1d3557?style=for-the-badge)](#problem-statement)
+[![Python](https://img.shields.io/badge/Python-3.x-3776AB?style=for-the-badge&logo=python&logoColor=white)](#tech-stack)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](#backend)
 
 </div>
 
 <p align="center">
-  <img src="assets/hero.svg" alt="Project hero banner" width="100%" />
+    <img src="assets/hero.svg" alt="On-device visual perception for privacy-preserving browser agents" width="100%" />
 </p>
 
 ## Project Overview
@@ -62,42 +60,27 @@ Important privacy categories reflected in the repository include:
 
 ## Our Solution
 
-The project defines a privacy-first browser-agent pipeline built around a safety boundary:
+The intended privacy-first browser-agent pipeline is built around two explicit network boundaries:
 
 ```mermaid
 flowchart LR
-    subgraph Implemented[Implemented]
-        A[Webpage Context] --> B[Sanitized DOM Input]
-        B --> C[Privacy Verification]
-        C --> D[Structured Action Request]
-        D --> E[Rule-based Reasoning Boundary]
-        E --> F[Validated Action Output]
-        D --> M[Optional Groq-hosted Vision Provider]
-        M --> F
-    end
+    B[Browser Extension] --> D[DOM + Local Vision]
+    D --> P[PII Detection]
+    P --> R[Local Redaction / Masking]
+    R --> V[Privacy Verification]
+    V --> S[Sanitized Context]
+    S --> N1[Network Boundary]
+    N1 --> M[VLM / LLM Reasoning]
+    M --> N2[Network Boundary]
+    N2 --> A[Local Action Validator]
+    A --> X[Browser]
 
-    subgraph InProgress[In Progress]
-        G[Browser Extension]
-        H[Local Visual Perception]
-        I[Redaction / Masking in Browser]
-    end
-
-    subgraph Planned[Planned]
-        J[Full Browser Automation Runtime]
-        K[On-device VLM / LLM Integration]
-        L[Production-grade Browser Execution]
-    end
-
-    A --> G
-    G --> H
-    H --> I
-    I --> C
-    F --> J
-    J --> K
-    K --> L
+    S -. current backend input .-> F[FastAPI + Rule-based Fallback]
+    F --> O[Validated click / type / scroll / wait]
+    M -. optional provider .-> G[Groq-hosted Vision Provider]
 ```
 
-The implemented portion of the repository is the privacy-aware backend contract, the rule-based action inference fallback, the validation boundary, and an optional Groq-hosted vision provider. The browser extension, live local vision stages, and fully integrated browser execution loop are still in progress or planned rather than fully shipped. The default provider remains rule-based; the optional hosted provider requires an API key and is covered by mocked tests.
+The implemented portion is the privacy-aware backend contract, rule-based action inference, action validation, and optional Groq-hosted vision provider. The browser extension, live local vision stages, and full browser execution loop are not fully shipped in this repository snapshot. The default provider remains rule-based; the optional hosted provider requires an API key and is covered by mocked tests.
 
 ### Current Status at a Glance
 
@@ -248,16 +231,17 @@ SIH2026/
 │   ├── main.py
 │   ├── reasoning.py
 │   ├── schemas.py
-│   ├── test_server.py
+│   ├── groq_provider.py
 │   ├── vlm.py
+│   ├── test_server.py
+│   ├── test_groq_provider.py
 │   ├── requirements.txt
 │   ├── requirements-test.txt
 │   └── README.md
 ├── tests/
 ├── vision/
 ├── .gitignore
-├── README.md
-└── .gitignore
+└── README.md
 ```
 
 The active implementation is in `server/`. Other folders are part of the overall system design and project structure but are not fully implemented in this snapshot.
@@ -415,7 +399,7 @@ The code documents the test suite as covering the health endpoint, action genera
 
 This repository does not currently include a production demo, screenshots, or a full browser-automation walkthrough. The most concrete runnable demo is the FastAPI backend and its Swagger UI. The optional Groq provider can be exercised through the same API after configuration.
 
-Demo assets will be added as the prototype progresses.
+The repository includes lightweight SVG diagrams below; a production browser demo is future work.
 
 ## Visual Assets
 
@@ -480,6 +464,13 @@ Future work for this project includes:
 - WebGPU or optimized local inference paths where appropriate
 - evaluation pipelines for action quality, privacy safety, and redaction effectiveness
 
+## Hackathon Information
+
+- **Event:** Smart India Hackathon 2026
+- **Problem statement:** 171 — On-device Visual Perception for Light-weight Browser Agents
+- **Project focus:** Privacy-preserving browser agents with local visual perception, sanitized context, and validated actions
+- **Runnable surface today:** FastAPI backend in `server/`
+
 ## Why This Matters
 
 This project matters because it addresses a core trust issue in AI-assisted browser automation. If browser agents can read pages and act on user intent, they must also be designed to avoid leakage of unnecessary personal and sensitive information. A local-first, privacy-aware approach reduces exposure while preserving useful agent behavior.
@@ -496,6 +487,3 @@ The repository currently contains a minimal set of project folders and scaffolde
 
 No license file was found in the repository, so no license section is included.
 
-## Visual Design Notes
-
-The main purpose of this README is to present the repository accurately and professionally, not to oversell incomplete functionality. The project is best described as a privacy-first prototype for safe browser-agent reasoning with a clear path toward local visual perception and stronger browser integration.
