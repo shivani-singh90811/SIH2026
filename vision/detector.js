@@ -217,10 +217,128 @@
         return { elements };
     }
 
+
+    /* ============================================================
+       YOLO INTEGRATION (adapted from arifmoin522-a11y/ui-detection-browser)
+    ============================================================ */
+
+    /*
+     * This section does NOT touch anything above it. It adapts the
+     * real YOLOv8s detector's raw output (see yolo-detector.js,
+     * loaded as a separate script -- content_scripts order in
+     * manifest.json) into the EXACT SAME contract shape as
+     * buildVisionOutput() above, so callers (the extension, /server,
+     * /agent) see one consistent format regardless of which
+     * perception source produced it.
+     *
+     * bbox stays [x1, y1, x2, y2] -- this is the contract already
+     * used by /privacy, /server, /agent and buildVisionOutput() above;
+     * it is not changed here.
+     */
+
+    // Maps the real model's 39 field-purpose classes
+    // (foduucom/web-form-ui-field-detection) to the 12 generic
+    // element types from docs/api.md section 2. Everything not listed
+    // is some flavor of a single-line input field.
+    const YOLO_CLASS_TO_TYPE = {
+        button: "button",
+        checkbox: "checkbox",
+        "reminder checkbox": "checkbox",
+        "terms checkbox": "checkbox",
+        "redio button": "radio", // verbatim dataset class name (typo preserved intentionally)
+        message: "textarea",
+        dropdown: "select",
+        "country dropdown": "select",
+        "day dropdown": "select",
+        "month dropdown": "select",
+        "year dropdown": "select",
+        "state dropdown": "select",
+        "gender dropdown": "select",
+    };
+
+    function yoloClassToContractType(yoloClass) {
+        return YOLO_CLASS_TO_TYPE[yoloClass] || "input";
+    }
+
+    function yoloBboxToArray(bbox) {
+        return [
+            Math.round(bbox.x1),
+            Math.round(bbox.y1),
+            Math.round(bbox.x2),
+            Math.round(bbox.y2),
+        ];
+    }
+
+    /**
+     * Adapt yolo-detector.js's raw detect() output into this file's
+     * contract shape. Pure function -- no browser/model/image needed,
+     * fully unit-testable.
+     *
+     * @param {Array<{class, score, bbox: {x1,y1,x2,y2}}>} rawDetections
+     * @returns {{elements: Array}}
+     */
+    function adaptYoloDetections(rawDetections) {
+        if (!Array.isArray(rawDetections)) {
+            throw new TypeError("adaptYoloDetections expects an array (yolo-detector.js's detect() output)");
+        }
+
+        const elements = rawDetections.map((det, index) => ({
+            id: `vision_yolo_${String(index + 1).padStart(3, "0")}`,
+            type: yoloClassToContractType(det.class),
+            // YOLO detects field *purpose*, not visible text -- never
+            // invent a label from the class name. A DOM/fusion layer
+            // (out of scope here) can fill this in from accessible
+            // DOM info when available.
+            label: null,
+            bbox: yoloBboxToArray(det.bbox),
+            confidence: typeof det.score === "number" ? det.score : 0,
+            source: "vision",
+            field_hint: det.class, // additive, non-contract: raw model class, for future privacy/fusion use
+        }));
+
+        return { elements };
+    }
+
+    /**
+     * Safe orchestration wrapper: runs YOLO detection on an image
+     * through an already-loaded UIDetector instance (see
+     * yolo-detector.js) and adapts the result. Never throws -- if
+     * detection fails for any reason (model not loaded, inference
+     * error, etc.), returns a clean structured error instead of
+     * crashing the caller, per the "clean fallback/error path"
+     * requirement.
+     *
+     * @param {object} detectorInstance - an already-constructed AND
+     *   loaded yolo-detector.js UIDetector instance.
+     * @param {HTMLImageElement|HTMLCanvasElement} imageElement
+     */
+    async function detectWithYolo(detectorInstance, imageElement) {
+        if (!detectorInstance) {
+            return {
+                success: false,
+                error: { code: "MODEL_LOAD_FAILED", message: "No YOLO detector instance was provided." },
+            };
+        }
+
+        try {
+            const rawDetections = await detectorInstance.detect(imageElement);
+            return { success: true, ...adaptYoloDetections(rawDetections) };
+        } catch (error) {
+            console.error("[Vision] YOLO detection failed, no detections returned:", error);
+            return {
+                success: false,
+                error: { code: "VISION_INFERENCE_FAILED", message: error?.message || "YOLO detection failed." },
+            };
+        }
+    }
+
     return {
         buildVisionOutput,
         classifyElement, // exported for direct unit testing
         extractLabel, // exported for direct unit testing
         isVisible, // exported for direct unit testing
+        adaptYoloDetections, // exported for direct unit testing
+        yoloClassToContractType, // exported for direct unit testing
+        detectWithYolo,
     };
 });
