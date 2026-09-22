@@ -217,6 +217,33 @@ class TestBackendContract(unittest.TestCase):
             },
         )
 
+    def test_wait_action_in_milliseconds(self):
+        """
+        Verify that the backend accepts a wait duration in milliseconds.
+        """
+
+        req = _base_request(
+            instruction="wait 500 ms"
+        )
+
+        response = client.post(
+            "/api/v1/action",
+            json=req,
+        )
+
+        self.assertEqual(
+            response.status_code,
+            200,
+        )
+
+        self.assertEqual(
+            response.json()["action"],
+            {
+                "type": "wait",
+                "duration": 500,
+            },
+        )
+
     # ===============================================================
     # PRIVACY TESTS
     # ===============================================================
