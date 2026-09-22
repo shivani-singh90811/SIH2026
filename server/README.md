@@ -78,6 +78,8 @@ uvicorn main:app --reload
 The service runs at `http://127.0.0.1:8000`. FastAPI Swagger UI is available at
 `http://127.0.0.1:8000/docs`.
 
+After starting the server, open the Swagger UI at `/docs` to test the available API endpoints interactively.
+
 ## Run tests
 
 ```bash
@@ -90,6 +92,16 @@ The suite covers the health endpoint, all four actions, target lookup errors,
 request validation, privacy rejection, capitalization preservation, safety
 limits, provider selection, and invalid provider output. The current suite has
 23 passing tests.
+
+## Backend Demo
+
+This video demonstrates the backend implementation: starting and running the
+FastAPI server locally, opening the Swagger API documentation, testing
+`POST /api/v1/action` with a valid privacy-verified request, and receiving a
+structured validated response. It also shows the supported safe browser action
+types: `click`, `type`, `scroll`, and `wait`.
+
+[Backend Demo Video](VIDEO_LINK_HERE)
 
 ## Security and limitations
 
